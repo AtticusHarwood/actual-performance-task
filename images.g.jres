@@ -4,6 +4,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "sky"
     },
+    "image2": {
+        "data": "hwQQABAAAAAvIvIi4u7+APAAzyzu7u4PAC/84ivu/v8AT0S+K+7+/fAiQr4r7v7/8CJC7u7u7g/wIkK+K//vDvAiQr4r7u8A8CJCvivu7w7wIkK+K+7vD/AiIu4r/v7/AM/M6y7v/v0AL8y84u7+/wDwQkQi4u4PAAAvIiIt7g4AAN8iIt3+AA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "race car"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
