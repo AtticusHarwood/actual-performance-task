@@ -244,8 +244,6 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer2, img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     `)
-scroller.scrollBackgroundWithSpeed(1 / 2 * (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
-scroller.scrollBackgroundWithSpeed(0 - driver_speed, 0, scroller.BackgroundLayer.Layer2)
 let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
 driver.setPosition(80, 97)
 controller.moveSprite(driver, 0, 15)
@@ -255,4 +253,18 @@ forever(function () {
     } else if (driver.y >= 116) {
         driver.setPosition(80, 115)
     }
+})
+forever(function () {
+    if (controller.right.isPressed()) {
+        pause(100)
+        driver_speed = driver_speed + 5
+    }
+    if (controller.left.isPressed() && driver_speed > 9) {
+        pause(100)
+        driver_speed = driver_speed - 10
+    }
+})
+forever(function () {
+    scroller.scrollBackgroundWithSpeed(-10 + 1 / 2 * (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
+    scroller.scrollBackgroundWithSpeed(0 - driver_speed, 0, scroller.BackgroundLayer.Layer2)
 })
