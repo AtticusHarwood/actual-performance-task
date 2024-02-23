@@ -1,12 +1,30 @@
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (true) {
-    	
+function gear_ratios (gears: number) {
+    if (gears == 1 && driver_speed < 46) {
+        acceleration = 17.5
+    } else if (gears == 2 && driver_speed < 80) {
+        acceleration = 10
+    } else if (gears == 3 && driver_speed < 114) {
+        acceleration = 7
+    } else if (gears == 4 && driver_speed < 160) {
+        acceleration = 5
     }
-    gear = gear + 1
+    return acceleration
+}
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (gear > 1) {
+        gear = gear - 1
+    }
 })
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (gear < 4) {
+        gear = gear + 1
+    }
+})
+let acceleration = 0
+let driver_speed = 0
 let gear = 0
 gear = 1
-let driver_speed = 0
+driver_speed = 0
 scroller.setLayerImage(scroller.BackgroundLayer.Layer0, assets.image`sky`)
 scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
     ................................................................................................................................................................
@@ -265,7 +283,10 @@ forever(function () {
 forever(function () {
     if (controller.right.isPressed()) {
         pause(100)
-        driver_speed = driver_speed + 5
+        driver_speed = driver_speed + gear_ratios(gear)
+        if (driver_speed > 160) {
+            driver_speed = 160
+        }
     }
     if (controller.left.isPressed() && driver_speed > 0) {
         pause(100)
