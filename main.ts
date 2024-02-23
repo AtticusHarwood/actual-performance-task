@@ -24,13 +24,26 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
         acceleration = 0
     }
     if (spawning) {
-        obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-        if (Math.percentChance(50)) {
-            obstacle.setPosition(160, 97)
+        if (driver_speed > 114) {
+            for (let index = 0; index < 2; index++) {
+                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                if (Math.percentChance(50)) {
+                    obstacle.setPosition(160, 95)
+                } else {
+                    obstacle.setPosition(161, 110)
+                }
+                obstacle.setVelocity(-1 * driver_speed, 0)
+                pause(200)
+            }
         } else {
-            obstacle.setPosition(158, 105)
+            obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+            if (Math.percentChance(50)) {
+                obstacle.setPosition(160, 94)
+            } else {
+                obstacle.setPosition(160, 111)
+            }
+            obstacle.setVelocity(-1 * driver_speed, 0)
         }
-        obstacle.setVelocity(-1 * driver_speed, 0)
     }
     return acceleration
 }
@@ -45,11 +58,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 let speed_display: TextSprite = null
-let obstacle: Sprite = null
 let acceleration = 0
 let driver_speed = 0
 let gear = 0
+let obstacle: Sprite = null
 let list: Image[] = []
+let pixel_distance = 0
 let obstacles: number[] = []
 list.push(img`
     . . . . . . . . . . . . . . . . 
@@ -103,6 +117,8 @@ list.push(img`
     . . . f 5 f f f 5 f f 5 f . . . 
     . . . f f . . f f . . f f . . . 
     `)
+obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+sprites.destroy(obstacle)
 gear = 1
 let gear_display = textsprite.create(convertToText(gear))
 gear_display.setPosition(10, 100)
@@ -354,7 +370,7 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer2, img`
     `)
 let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
 driver.setPosition(80, 97)
-controller.moveSprite(driver, 0, 15)
+controller.moveSprite(driver, 0, 80)
 forever(function () {
     sprites.destroy(gear_display)
     gear_display = textsprite.create(convertToText(gear))
@@ -389,10 +405,18 @@ forever(function () {
 })
 forever(function () {
     gear_ratios(gear, driver_speed, false)
+    if (driver.overlapsWith(obstacle)) {
+        game.gameOver(false)
+    }
 })
 forever(function () {
     scroller.scrollBackgroundWithSpeed(-10 + (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
     scroller.scrollBackgroundWithSpeed(0 - 3 * driver_speed, 0, scroller.BackgroundLayer.Layer2)
+})
+forever(function () {
+    pause(100)
+    pixel_distance = pixel_distance + driver_speed * 0.1
+    info.setScore(pixel_distance)
 })
 forever(function () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
