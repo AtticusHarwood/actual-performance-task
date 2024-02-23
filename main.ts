@@ -1,3 +1,11 @@
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (true) {
+    	
+    }
+    gear = gear + 1
+})
+let gear = 0
+gear = 1
 let driver_speed = 0
 scroller.setLayerImage(scroller.BackgroundLayer.Layer0, assets.image`sky`)
 scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
@@ -259,9 +267,12 @@ forever(function () {
         pause(100)
         driver_speed = driver_speed + 5
     }
-    if (controller.left.isPressed() && driver_speed > 9) {
+    if (controller.left.isPressed() && driver_speed > 0) {
         pause(100)
-        driver_speed = driver_speed - 10
+        driver_speed = driver_speed - 30
+    }
+    if (controller.left.isPressed() && driver_speed < 0) {
+        driver_speed = 0
     }
 })
 forever(function () {
