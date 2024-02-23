@@ -1,12 +1,36 @@
-function gear_ratios (gears: number) {
-    if (gears == 1 && driver_speed < 46) {
+namespace SpriteKind {
+    export const stationary = SpriteKind.create()
+}
+function gear_ratios (gears: number, speed: number, spawning: boolean) {
+    if (gears == 1 && speed < 46) {
         acceleration = 17.5
-    } else if (gears == 2 && driver_speed < 80) {
+    } else if (gears == 2 && speed < 80) {
         acceleration = 10
-    } else if (gears == 3 && driver_speed < 114) {
+    } else if (gears == 3 && speed < 114) {
         acceleration = 7
-    } else if (gears == 4 && driver_speed < 160) {
+    } else if (gears == 4 && speed < 160) {
         acceleration = 5
+    } else if (gears == 1 && speed > 46) {
+        driver_speed = 46
+        acceleration = 0
+    } else if (gears == 2 && speed > 80) {
+        driver_speed = 80
+        acceleration = 0
+    } else if (gears == 3 && speed > 114) {
+        driver_speed = 114
+        acceleration = 0
+    } else if (gears == 4 && speed > 160) {
+        driver_speed = 160
+        acceleration = 0
+    }
+    if (spawning) {
+        obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+        if (Math.percentChance(50)) {
+            obstacle.setPosition(160, 97)
+        } else {
+            obstacle.setPosition(158, 105)
+        }
+        obstacle.setVelocity(-1 * driver_speed, 0)
     }
     return acceleration
 }
@@ -20,10 +44,68 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         gear = gear + 1
     }
 })
+let speed_display: TextSprite = null
+let obstacle: Sprite = null
 let acceleration = 0
 let driver_speed = 0
 let gear = 0
+let list: Image[] = []
+let obstacles: number[] = []
+list.push(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . 6 6 6 6 6 6 6 6 . . . . 
+    . . . 6 9 6 6 6 6 6 6 c 6 . . . 
+    . . 6 c 9 6 6 6 6 6 6 c c 6 . . 
+    . 6 c c 9 9 9 9 9 9 6 c c 9 6 d 
+    . 6 c 6 8 8 8 8 8 8 8 b c 9 6 6 
+    . 6 6 8 b b 8 b b b 8 8 b 9 6 6 
+    . 6 8 b b b 8 b b b b 8 6 6 6 6 
+    . 8 8 6 6 6 8 6 6 6 6 6 8 6 6 6 
+    . 8 8 8 8 8 8 f 8 8 8 f 8 6 d d 
+    . 8 8 8 8 8 8 f 8 8 f 8 8 8 6 d 
+    . 8 8 8 8 8 8 f f f 8 8 8 8 8 8 
+    . 8 f f f f 8 8 8 8 f f f 8 8 8 
+    . . f f f f f 8 8 f f f f f 8 . 
+    . . . f f f . . . . f f f f . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+list.push(img`
+    ...cccccccccccccccccc...
+    ..cbddddddddddddddddbc..
+    .cddddddddddddddddddddc.
+    .cddbbbbbbbbbbbbbbbbddc.
+    .cdbbbbbbbbbbbbbbbbbbdc.
+    .cdbbbbbbbbbbbbbbbbbbdc.
+    cbbbccccccccccccccccbbbc
+    cddcbddddddddddddddbcddc
+    cddcddddddddddddddddcddc
+    cddcddddddddddddddddcddc
+    cddcddddddddddddddddcddc
+    cbdcddddddddddddddddcdbc
+    ccbbbbbbbbbbbbbbbbbbbbcc
+    ccbbbbbbbbbbbbbbbbbbbbcc
+    cccccccccccccccccccccccc
+    ..cbbc............cbbc..
+    `)
+list.push(img`
+    . . 4 4 4 . . . . 4 4 4 . . . . 
+    . 4 5 5 5 e . . e 5 5 5 4 . . . 
+    4 5 5 5 5 5 e e 5 5 5 5 5 4 . . 
+    4 5 5 4 4 5 5 5 5 4 4 5 5 4 . . 
+    e 5 4 4 5 5 5 5 5 5 4 4 5 e . . 
+    . e e 5 5 5 5 5 5 5 5 e e . . . 
+    . . e 5 f 5 5 5 5 f 5 e . . . . 
+    . . f 5 5 5 4 4 5 5 5 f . . f f 
+    . . f 4 5 5 f f 5 5 6 f . f 5 f 
+    . . . f 6 6 6 6 6 6 4 4 f 5 5 f 
+    . . . f 4 5 5 5 5 5 5 4 4 5 f . 
+    . . . f 5 5 5 5 5 4 5 5 f f . . 
+    . . . f 5 f f f 5 f f 5 f . . . 
+    . . . f f . . f f . . f f . . . 
+    `)
 gear = 1
+let gear_display = textsprite.create(convertToText(gear))
+gear_display.setPosition(10, 100)
 driver_speed = 0
 scroller.setLayerImage(scroller.BackgroundLayer.Layer0, assets.image`sky`)
 scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
@@ -274,6 +356,12 @@ let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
 driver.setPosition(80, 97)
 controller.moveSprite(driver, 0, 15)
 forever(function () {
+    sprites.destroy(gear_display)
+    gear_display = textsprite.create(convertToText(gear))
+    gear_display.setPosition(10, 100)
+    pause(100)
+})
+forever(function () {
     if (driver.y <= 92) {
         driver.setPosition(80, 93)
     } else if (driver.y >= 116) {
@@ -281,22 +369,33 @@ forever(function () {
     }
 })
 forever(function () {
+    sprites.destroy(speed_display)
+    speed_display = textsprite.create(convertToText(driver_speed))
+    speed_display.setPosition(145, 100)
+    pause(100)
+})
+forever(function () {
     if (controller.right.isPressed()) {
         pause(100)
-        driver_speed = driver_speed + gear_ratios(gear)
-        if (driver_speed > 160) {
-            driver_speed = 160
-        }
+        driver_speed = driver_speed + gear_ratios(gear, driver_speed, false)
     }
     if (controller.left.isPressed() && driver_speed > 0) {
         pause(100)
         driver_speed = driver_speed - 30
-    }
-    if (controller.left.isPressed() && driver_speed < 0) {
-        driver_speed = 0
+        if (driver_speed < 0) {
+            driver_speed = 0
+        }
     }
 })
 forever(function () {
-    scroller.scrollBackgroundWithSpeed(-10 + 1 / 2 * (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
-    scroller.scrollBackgroundWithSpeed(0 - driver_speed, 0, scroller.BackgroundLayer.Layer2)
+    gear_ratios(gear, driver_speed, false)
+})
+forever(function () {
+    scroller.scrollBackgroundWithSpeed(-10 + (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
+    scroller.scrollBackgroundWithSpeed(0 - 3 * driver_speed, 0, scroller.BackgroundLayer.Layer2)
+})
+forever(function () {
+    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+    gear_ratios(gear, driver_speed, true)
+    pause(3000)
 })
