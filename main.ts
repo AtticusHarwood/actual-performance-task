@@ -23,7 +23,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
         driver_speed = 160
         acceleration = 0
     }
-    if (spawning) {
+    if (spawning && driver_speed > 18) {
         if (driver_speed > 114) {
             for (let index = 0; index < 2; index++) {
                 obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
@@ -33,7 +33,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                     obstacle.setPosition(161, 112)
                 }
                 obstacle.setVelocity(-1 * driver_speed, 0)
-                pause(200)
+                pause(275)
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
@@ -58,12 +58,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 let speed_display: TextSprite = null
+let time: TextSprite = null
 let acceleration = 0
 let driver_speed = 0
 let gear = 0
 let obstacle: Sprite = null
 let list: Image[] = []
-game.showLongText("complete a 2000 pixel distance as fast as possible", DialogLayout.Bottom)
+let timer = 0
+game.showLongText("complete a 4000 pixel distance as fast as possible", DialogLayout.Bottom)
 let pixel_distance = 0
 let obstacles: number[] = []
 list.push(img`
@@ -370,8 +372,15 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer2, img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     `)
 let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
-driver.setPosition(80, 97)
+driver.setPosition(50, 97)
 controller.moveSprite(driver, 0, 80)
+forever(function () {
+    sprites.destroy(time)
+    timer = timer + 0.5
+    time = textsprite.create(convertToText(timer))
+    time.setPosition(12, 10)
+    pause(500)
+})
 forever(function () {
     sprites.destroy(gear_display)
     gear_display = textsprite.create(convertToText(gear))
@@ -380,9 +389,9 @@ forever(function () {
 })
 forever(function () {
     if (driver.y <= 92) {
-        driver.setPosition(80, 93)
+        driver.setPosition(50, 93)
     } else if (driver.y >= 116) {
-        driver.setPosition(80, 115)
+        driver.setPosition(50, 115)
     }
 })
 forever(function () {
@@ -417,8 +426,8 @@ forever(function () {
 forever(function () {
     pause(100)
     pixel_distance = pixel_distance + driver_speed * 0.1
-    info.setScore(pixel_distance)
-    if (pixel_distance > 500) {
+    info.setScore(timer)
+    if (pixel_distance > 4000) {
         game.gameOver(true)
     }
 })
