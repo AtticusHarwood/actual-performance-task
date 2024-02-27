@@ -25,6 +25,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
     }
     if (spawning && driver_speed > 18) {
         if (driver_speed > 114) {
+            obstacle_speed = -1 * driver_speed
             for (let index = 0; index < 2; index++) {
                 obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
                 if (Math.percentChance(50)) {
@@ -32,8 +33,8 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                 } else {
                     obstacle.setPosition(161, 112)
                 }
-                obstacle.setVelocity(-1 * driver_speed, 0)
-                pauseUntil(() => obstacle.x < 120)
+                obstacle.setVelocity(obstacle_speed, 0)
+                pauseUntil(() => obstacle.x < 132)
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
@@ -59,6 +60,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 let speed_display: TextSprite = null
 let time: TextSprite = null
+let obstacle_speed = 0
 let acceleration = 0
 let driver_speed = 0
 let gear = 0
@@ -87,38 +89,40 @@ list.push(img`
     . . . . . . . . . . . . . . . . 
     `)
 list.push(img`
-    ...cccccccccccccccccc...
-    ..cbddddddddddddddddbc..
-    .cddddddddddddddddddddc.
-    .cddbbbbbbbbbbbbbbbbddc.
-    .cdbbbbbbbbbbbbbbbbbbdc.
-    .cdbbbbbbbbbbbbbbbbbbdc.
-    cbbbccccccccccccccccbbbc
-    cddcbddddddddddddddbcddc
-    cddcddddddddddddddddcddc
-    cddcddddddddddddddddcddc
-    cddcddddddddddddddddcddc
-    cbdcddddddddddddddddcdbc
-    ccbbbbbbbbbbbbbbbbbbbbcc
-    ccbbbbbbbbbbbbbbbbbbbbcc
-    cccccccccccccccccccccccc
-    ..cbbc............cbbc..
+    . . . . . . . . . . . . . . . . 
+    . . . . 2 2 2 2 2 2 2 2 . . . . 
+    . . . 2 4 2 2 2 2 2 2 c 2 . . . 
+    . . 2 c 4 2 2 2 2 2 2 c c 2 . . 
+    . 2 c c 4 4 4 4 4 4 2 c c 4 2 d 
+    . 2 c 2 e e e e e e e b c 4 2 2 
+    . 2 2 e b b e b b b e e b 4 2 2 
+    . 2 e b b b e b b b b e 2 2 2 2 
+    . e e 2 2 2 e 2 2 2 2 2 e 2 2 2 
+    . e e e e e e f e e e f e 2 d d 
+    . e e e e e e f e e f e e e 2 d 
+    . e e e e e e f f f e e e e e e 
+    . e f f f f e e e e f f f e e e 
+    . . f f f f f e e f f f f f e . 
+    . . . f f f . . . . f f f f . . 
+    . . . . . . . . . . . . . . . . 
     `)
 list.push(img`
-    . . 4 4 4 . . . . 4 4 4 . . . . 
-    . 4 5 5 5 e . . e 5 5 5 4 . . . 
-    4 5 5 5 5 5 e e 5 5 5 5 5 4 . . 
-    4 5 5 4 4 5 5 5 5 4 4 5 5 4 . . 
-    e 5 4 4 5 5 5 5 5 5 4 4 5 e . . 
-    . e e 5 5 5 5 5 5 5 5 e e . . . 
-    . . e 5 f 5 5 5 5 f 5 e . . . . 
-    . . f 5 5 5 4 4 5 5 5 f . . f f 
-    . . f 4 5 5 f f 5 5 6 f . f 5 f 
-    . . . f 6 6 6 6 6 6 4 4 f 5 5 f 
-    . . . f 4 5 5 5 5 5 5 4 4 5 f . 
-    . . . f 5 5 5 5 5 4 5 5 f f . . 
-    . . . f 5 f f f 5 f f 5 f . . . 
-    . . . f f . . f f . . f f . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . 3 3 3 3 3 3 3 3 . . . . 
+    . . . 3 d 3 3 3 3 3 3 c 3 . . . 
+    . . 3 c d 3 3 3 3 3 3 c c 3 . . 
+    . 3 c c d d d d d d 3 c c d 3 d 
+    . 3 c 3 a a a a a a a b c d 3 3 
+    . 3 3 a b b a b b b a a b d 3 3 
+    . 3 a b b b a b b b b a 3 3 3 3 
+    . a a 3 3 3 a 3 3 3 3 3 a 3 3 3 
+    . a a a a a a f a a a f a 3 d d 
+    . a a a a a a f a a f a a a 3 d 
+    . a a a a a a f f f a a a a a a 
+    . a f f f f a a a a f f f a a a 
+    . . f f f f f a a f f f f f a . 
+    . . . f f f . . . . f f f f . . 
+    . . . . . . . . . . . . . . . . 
     `)
 obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
 sprites.destroy(obstacle)
