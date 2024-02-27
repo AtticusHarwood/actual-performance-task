@@ -33,7 +33,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                     obstacle.setPosition(161, 112)
                 }
                 obstacle.setVelocity(-1 * driver_speed, 0)
-                pause(275)
+                pauseUntil(() => obstacle.x < 120)
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
@@ -426,8 +426,8 @@ forever(function () {
 forever(function () {
     pause(100)
     pixel_distance = pixel_distance + driver_speed * 0.1
-    info.setScore(timer)
     if (pixel_distance > 4000) {
+        info.setScore(timer)
         game.gameOver(true)
     }
 })
