@@ -30,7 +30,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                 if (Math.percentChance(50)) {
                     obstacle.setPosition(160, 95)
                 } else {
-                    obstacle.setPosition(161, 110)
+                    obstacle.setPosition(161, 112)
                 }
                 obstacle.setVelocity(-1 * driver_speed, 0)
                 pause(200)
@@ -40,7 +40,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
             if (Math.percentChance(50)) {
                 obstacle.setPosition(160, 94)
             } else {
-                obstacle.setPosition(160, 111)
+                obstacle.setPosition(160, 112)
             }
             obstacle.setVelocity(-1 * driver_speed, 0)
         }
@@ -63,6 +63,7 @@ let driver_speed = 0
 let gear = 0
 let obstacle: Sprite = null
 let list: Image[] = []
+game.showLongText("complete a 2000 pixel distance as fast as possible", DialogLayout.Bottom)
 let pixel_distance = 0
 let obstacles: number[] = []
 list.push(img`
@@ -417,6 +418,9 @@ forever(function () {
     pause(100)
     pixel_distance = pixel_distance + driver_speed * 0.1
     info.setScore(pixel_distance)
+    if (pixel_distance > 500) {
+        game.gameOver(true)
+    }
 })
 forever(function () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
