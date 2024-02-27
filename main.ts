@@ -29,12 +29,12 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
             for (let index = 0; index < 2; index++) {
                 obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
                 if (Math.percentChance(50)) {
-                    obstacle.setPosition(160, 95)
+                    obstacle.setPosition(160, 94)
                 } else {
                     obstacle.setPosition(161, 112)
                 }
                 obstacle.setVelocity(obstacle_speed, 0)
-                pauseUntil(() => obstacle.x < 132)
+                pauseUntil(() => obstacle.x < 133)
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
@@ -419,7 +419,58 @@ forever(function () {
 })
 forever(function () {
     gear_ratios(gear, driver_speed, false)
-    if (driver.overlapsWith(obstacle)) {
+    if (driver.overlapsWith(sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . 6 6 6 6 6 6 6 6 . . . . 
+        . . . 6 9 6 6 6 6 6 6 c 6 . . . 
+        . . 6 c 9 6 6 6 6 6 6 c c 6 . . 
+        . 6 c c 9 9 9 9 9 9 6 c c 9 6 d 
+        . 6 c 6 8 8 8 8 8 8 8 b c 9 6 6 
+        . 6 6 8 b b 8 b b b 8 8 b 9 6 6 
+        . 6 8 b b b 8 b b b b 8 6 6 6 6 
+        . 8 8 6 6 6 8 6 6 6 6 6 8 6 6 6 
+        . 8 8 8 8 8 8 f 8 8 8 f 8 6 d d 
+        . 8 8 8 8 8 8 f 8 8 f 8 8 8 6 d 
+        . 8 8 8 8 8 8 f f f 8 8 8 8 8 8 
+        . 8 f f f f 8 8 8 8 f f f 8 8 8 
+        . . f f f f f 8 8 f f f f f 8 . 
+        . . . f f f . . . . f f f f . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Enemy)) || driver.overlapsWith(sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . 2 2 2 2 2 2 2 2 . . . . 
+        . . . 2 4 2 2 2 2 2 2 c 2 . . . 
+        . . 2 c 4 2 2 2 2 2 2 c c 2 . . 
+        . 2 c c 4 4 4 4 4 4 2 c c 4 2 d 
+        . 2 c 2 e e e e e e e b c 4 2 2 
+        . 2 2 e b b e b b b e e b 4 2 2 
+        . 2 e b b b e b b b b e 2 2 2 2 
+        . e e 2 2 2 e 2 2 2 2 2 e 2 2 2 
+        . e e e e e e f e e e f e 2 d d 
+        . e e e e e e f e e f e e e 2 d 
+        . e e e e e e f f f e e e e e e 
+        . e f f f f e e e e f f f e e e 
+        . . f f f f f e e f f f f f e . 
+        . . . f f f . . . . f f f f . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Enemy)) || driver.overlapsWith(sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . 3 3 3 3 3 3 3 3 . . . . 
+        . . . 3 d 3 3 3 3 3 3 c 3 . . . 
+        . . 3 c d 3 3 3 3 3 3 c c 3 . . 
+        . 3 c c d d d d d d 3 c c d 3 d 
+        . 3 c 3 a a a a a a a b c d 3 3 
+        . 3 3 a b b a b b b a a b d 3 3 
+        . 3 a b b b a b b b b a 3 3 3 3 
+        . a a 3 3 3 a 3 3 3 3 3 a 3 3 3 
+        . a a a a a a f a a a f a 3 d d 
+        . a a a a a a f a a f a a a 3 d 
+        . a a a a a a f f f a a a a a a 
+        . a f f f f a a a a f f f a a a 
+        . . f f f f f a a f f f f f a . 
+        . . . f f f . . . . f f f f . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Enemy))) {
         game.gameOver(false)
     }
 })
