@@ -31,7 +31,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                 if (Math.percentChance(50)) {
                     obstacle.setPosition(160, 95)
                 } else {
-                    obstacle.setPosition(161, 112)
+                    obstacle.setPosition(160, 112)
                 }
                 obstacle.setVelocity(obstacle_speed, 0)
                 pauseUntil(() => obstacle.x < 132)
