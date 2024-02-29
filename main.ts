@@ -26,22 +26,29 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
     if (spawning && driver_speed > 18) {
         if (driver_speed > 114) {
             obstacle_speed = -1 * driver_speed
-            for (let index = 0; index < 2; index++) {
+            if (Math.percentChance(50)) {
                 obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-                if (Math.percentChance(50)) {
-                    obstacle.setPosition(160, 95)
-                } else {
-                    obstacle.setPosition(160, 112)
-                }
+                obstacle.setPosition(160, 97)
                 obstacle.setVelocity(obstacle_speed, 0)
-                pauseUntil(() => obstacle.x < 132)
+                pauseUntil(() => obstacle.x < 120)
+                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                obstacle.setPosition(160, 116)
+                obstacle.setVelocity(obstacle_speed, 0)
+            } else {
+                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                obstacle.setPosition(160, 97)
+                obstacle.setVelocity(obstacle_speed, 0)
+                pauseUntil(() => obstacle.x < 120)
+                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                obstacle.setPosition(160, 116)
+                obstacle.setVelocity(obstacle_speed, 0)
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
             if (Math.percentChance(50)) {
-                obstacle.setPosition(160, 94)
+                obstacle.setPosition(160, 93)
             } else {
-                obstacle.setPosition(160, 112)
+                obstacle.setPosition(160, 115)
             }
             obstacle.setVelocity(-1 * driver_speed, 0)
         }
@@ -57,6 +64,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (gear < 4) {
         gear = gear + 1
     }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    game.gameOver(false)
 })
 let speed_display: TextSprite = null
 let time: TextSprite = null
@@ -376,8 +386,8 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer2, img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     `)
 let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
-driver.setPosition(50, 97)
-controller.moveSprite(driver, 0, 80)
+driver.setPosition(40, 104)
+controller.moveSprite(driver, 0, 50)
 forever(function () {
     sprites.destroy(time)
     timer = timer + 0.5
@@ -393,9 +403,9 @@ forever(function () {
 })
 forever(function () {
     if (driver.y <= 92) {
-        driver.setPosition(50, 93)
+        driver.setPosition(40, 93)
     } else if (driver.y >= 116) {
-        driver.setPosition(50, 115)
+        driver.setPosition(40, 115)
     }
 })
 forever(function () {
@@ -418,12 +428,6 @@ forever(function () {
     }
 })
 forever(function () {
-    gear_ratios(gear, driver_speed, false)
-    if (driver.overlapsWith(obstacle)) {
-        game.gameOver(false)
-    }
-})
-forever(function () {
     scroller.scrollBackgroundWithSpeed(-10 + (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
     scroller.scrollBackgroundWithSpeed(0 - 3 * driver_speed, 0, scroller.BackgroundLayer.Layer2)
 })
@@ -439,4 +443,7 @@ forever(function () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
     gear_ratios(gear, driver_speed, true)
     pause(3000)
+})
+forever(function () {
+    gear_ratios(gear, driver_speed, false)
 })
