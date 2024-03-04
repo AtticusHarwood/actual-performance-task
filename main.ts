@@ -64,8 +64,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     game.gameOver(false)
 })
-let speed_display: TextSprite = null
 let time: TextSprite = null
+let speed_display: TextSprite = null
 let obstacle_speed = 0
 let acceleration = 0
 let driver_speed = 0
@@ -385,11 +385,10 @@ let driver = sprites.create(assets.image`race car`, SpriteKind.Player)
 driver.setPosition(40, 104)
 controller.moveSprite(driver, 0, 50)
 forever(function () {
-    sprites.destroy(time)
-    timer = timer + 0.5
-    time = textsprite.create(convertToText(timer))
-    time.setPosition(12, 10)
-    pause(500)
+    sprites.destroy(speed_display)
+    speed_display = textsprite.create(convertToText(driver_speed))
+    speed_display.setPosition(145, 100)
+    pause(100)
 })
 forever(function () {
     sprites.destroy(gear_display)
@@ -398,17 +397,26 @@ forever(function () {
     pause(100)
 })
 forever(function () {
+    pause(100)
+    pixel_distance = pixel_distance + driver_speed * 0.1
+    if (pixel_distance > 4000) {
+        info.setScore(timer)
+        game.gameOver(true)
+    }
+})
+forever(function () {
+    sprites.destroy(time)
+    timer = timer + 0.5
+    time = textsprite.create(convertToText(timer))
+    time.setPosition(12, 10)
+    pause(500)
+})
+forever(function () {
     if (driver.y <= 92) {
         driver.setPosition(40, 93)
     } else if (driver.y >= 116) {
         driver.setPosition(40, 115)
     }
-})
-forever(function () {
-    sprites.destroy(speed_display)
-    speed_display = textsprite.create(convertToText(driver_speed))
-    speed_display.setPosition(145, 100)
-    pause(100)
 })
 forever(function () {
     if (controller.right.isPressed()) {
@@ -426,14 +434,6 @@ forever(function () {
 forever(function () {
     scroller.scrollBackgroundWithSpeed(-10 + (0 - driver_speed), 0, scroller.BackgroundLayer.Layer1)
     scroller.scrollBackgroundWithSpeed(0 - 3 * driver_speed, 0, scroller.BackgroundLayer.Layer2)
-})
-forever(function () {
-    pause(100)
-    pixel_distance = pixel_distance + driver_speed * 0.1
-    if (pixel_distance > 4000) {
-        info.setScore(timer)
-        game.gameOver(true)
-    }
 })
 forever(function () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
