@@ -26,31 +26,27 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
     if (spawning && driver_speed > 18) {
         if (driver_speed > 114) {
             obstacle_speed = -1 * driver_speed
-            if (Math.percentChance(50)) {
-                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-                obstacle.setPosition(160, 97)
-                obstacle.setVelocity(obstacle_speed, 0)
-                pauseUntil(() => obstacle.x < 120)
-                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-                obstacle.setPosition(160, 116)
-                obstacle.setVelocity(obstacle_speed, 0)
-            } else {
-                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-                obstacle.setPosition(160, 97)
-                obstacle.setVelocity(obstacle_speed, 0)
-                pauseUntil(() => obstacle.x < 120)
-                obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
-                obstacle.setPosition(160, 116)
-                obstacle.setVelocity(obstacle_speed, 0)
+            for (let index = 0; index < 2; index++) {
+                if (Math.percentChance(50)) {
+                    obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                    obstacle.setPosition(160, 95)
+                    obstacle.setVelocity(obstacle_speed, 0)
+                    pauseUntil(() => obstacle.x < 120)
+                } else {
+                    obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
+                    obstacle.setPosition(160, 116)
+                    obstacle.setVelocity(obstacle_speed, 0)
+                    pauseUntil(() => obstacle.x < 121)
+                }
             }
         } else {
             obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
             if (Math.percentChance(50)) {
-                obstacle.setPosition(160, 93)
+                obstacle.setPosition(160, 95)
             } else {
-                obstacle.setPosition(160, 115)
+                obstacle.setPosition(160, 116)
             }
-            obstacle.setVelocity(-1 * driver_speed, 0)
+            obstacle.setVelocity(obstacle_speed, 0)
         }
     }
     return acceleration
