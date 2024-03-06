@@ -31,7 +31,7 @@ function gear_ratios (gears: number, speed: number, spawning: boolean) {
                     obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
                     obstacle.setPosition(160, 95)
                     obstacle.setVelocity(obstacle_speed, 0)
-                    pauseUntil(() => obstacle.x < 120)
+                    pauseUntil(() => obstacle.x < 121)
                 } else {
                     obstacle = sprites.create(list._pickRandom(), SpriteKind.Enemy)
                     obstacle.setPosition(160, 116)
